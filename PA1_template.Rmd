@@ -130,26 +130,16 @@ V. Are there differences in activity patterns between weekdays and weekends?
 ```{r computingweekday, cache=TRUE,echo=TRUE}
 library(data.table)
 #calculating the week number from the date
-week <- wday(doc_copy_missing_filled$date)
+week <- weekdays(as.Date(doc_copy_missing_filled$date), abbreviate = FALSE)
 week_day <- week
 count <- nrow(doc_copy_missing_filled)
 for (i in 1:count) 
 {
-  #the loop translates the weeknumber into a weekday or weekend. mon - fri weekday
-    if(week[i] == 1)
-        week_day[i] <- 'weekend'
-    if(week[i] == 2)
-        week_day[i] <- 'weekday'
-    if(week[i] == 3)
-        week_day[i] <- 'weekday'
-    if(week[i] == 4)
-        week_day[i] <- 'weekday'
-    if(week[i] == 5)
-        week_day[i] <- 'weekday'
-    if(week[i] == 6)
-        week_day[i] <- 'weekday'
-    if(week[i] == 7)
-        week_day[i] <- 'weekend'
+     #the loop translates the weeknumber into a weekday or weekend. mon - fri weekday
+     if(week[i] == "Saturday" || week[i] == "Sunday")
+         week_day[i] <- 'weekend'
+     else
+         week_day[i] <- 'weekday'
 }
 #moving the values into a new column Weekday to the dataset 
 doc_copy_missing_filled$Weekday <-week_day
@@ -169,6 +159,6 @@ avg_interval_weekday <- aggregate(steps~interval, data = doc_weekday, FUN = mean
 avg_interval_weekend <- aggregate(steps~interval, data = doc_weekend, FUN = mean )
 
 #plots
-plot(x = avg_interval_weekday$interval, y = avg_interval_weekday$steps, type = "l") 
-plot(x = avg_interval_weekend$interval, y = avg_interval_weekend$steps, type = "l") 
+plot(x = avg_interval_weekday$interval, y = avg_interval_weekday$steps, type = "l", xlab = "Intervals", ylab = "Steps", main = "Interval Plot- Weekdays") 
+plot(x = avg_interval_weekend$interval, y = avg_interval_weekend$steps, type = "l", xlab = "Intervals", ylab = "Steps", main = "Interval Plot - Weekends") 
 ```
